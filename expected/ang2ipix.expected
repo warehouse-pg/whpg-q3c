@@ -123,4 +123,4 @@
  {315,35.2643897079092}
 (1 row)
 
-ERROR:  Invalid ipix value
+ERROR:  Invalid ipix value (q3c.c:279)
