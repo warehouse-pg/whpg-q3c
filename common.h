@@ -23,7 +23,17 @@
 
 #include <math.h>
 #include <stdlib.h>
+
+/* This is for compiling q3c stuff without postresql */
+#ifdef Q3C_STANDALONE
+#include <stdint.h>
+#include <inttypes.h>
+typedef int64_t int64;
+#define INT64_FORMAT "%" PRId64
+#define INT64CONST(x) INT64_C(x)
+#else
 #include "postgres.h"
+#endif
 
 #ifndef __STDC_FORMAT_MACROS
 #define __STDC_FORMAT_MACROS
@@ -206,6 +216,14 @@ typedef long double q3c_coord_t;
 
 struct q3c_prm
 {
+	const q3c_ipix_t nside;
+	const q3c_ipix_t *xbits;
+	const q3c_ipix_t *ybits;
+	const q3c_ipix_t *xbits1;
+	const q3c_ipix_t *ybits1;
+};
+struct q3c_prm_write
+{
 	q3c_ipix_t nside;
 	q3c_ipix_t *xbits;
 	q3c_ipix_t *ybits;
@@ -257,11 +275,11 @@ typedef struct
 
 typedef enum {Q3C_CIRCLE, Q3C_POLYGON, Q3C_ELLIPSE} q3c_region;
 
-void init_q3c(struct q3c_prm *, q3c_ipix_t);
+void init_q3c(struct q3c_prm_write *, q3c_ipix_t);
 
-void init_q3c1(struct q3c_prm *, q3c_ipix_t);
+void init_q3c1(struct q3c_prm_write *, q3c_ipix_t);
 
-void q3c_dump_prm(struct q3c_prm *,char *);
+void q3c_dump_prm(struct q3c_prm_write *,char *);
 
 void q3c_ang2ipix(struct q3c_prm *, q3c_coord_t, q3c_coord_t, q3c_ipix_t *);
 
@@ -341,8 +359,8 @@ int q3c_check_sphere_point_in_poly(struct q3c_prm *hprm, int n,
 
 char q3c_get_region_facenum(q3c_region region, void *data);
 
-q3c_ipix_t q3c_xiyi2ipix(q3c_ipix_t nside, q3c_ipix_t *xbits,
-                         q3c_ipix_t *ybits, char face_num,
+q3c_ipix_t q3c_xiyi2ipix(const q3c_ipix_t nside, const q3c_ipix_t *xbits,
+                         const q3c_ipix_t *ybits, char face_num,
                          q3c_ipix_t xi, q3c_ipix_t yi);
 
 void q3c_multi_face_check(q3c_coord_t *xmin0, q3c_coord_t *ymin0,
