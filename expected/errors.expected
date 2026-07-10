@@ -1,16 +1,16 @@
-ERROR:  Polygons with more than 100 vertices are not supported (q3c.c:971)
+ERROR:  Polygons with more than 100 vertices are not supported (q3c.c:1004)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
 ERROR:  Invalid array argument!
-The array should contain even number of elements (q3c.c:924)
+The array should contain even number of elements (q3c.c:957)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:928)
+ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:961)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
 ERROR:  null array element not allowed in this context
 ERROR:  null array element not allowed in this context
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:967)
+ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:1000)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  The polygon is too large. Polygons having diameter >~23 degrees are unsupported (q3c.c:1198)
+ERROR:  The polygon is too large. Polygons having diameter >~23 degrees are unsupported (q3c.c:1239)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
 ERROR:  q3c_nearby_it: invalid iteration -1; valid range is 0..7
 ERROR:  q3c_nearby_it: invalid iteration 8; valid range is 0..7

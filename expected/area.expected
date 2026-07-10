@@ -3,7 +3,7 @@
  t
 (1 row)
 
-ERROR:  Invalid depth. It should be less than 31. (q3c.c:315)
-ERROR:  Invalid depth. It should be greater than 0. (q3c.c:311)
-ERROR:  Invalid ipix value (q3c.c:319)
-ERROR:  Invalid ipix value (q3c.c:323)
+ERROR:  Invalid depth. It should be less than 31. (q3c.c:333)
+ERROR:  Invalid depth. It should be greater than 0. (q3c.c:329)
+ERROR:  Invalid ipix value (q3c.c:337)
+ERROR:  Invalid ipix value (q3c.c:341)
