@@ -83,8 +83,7 @@ static void q3c_check_iteration(const char *funcname, int iteration, int nitems)
 {
 	if ((iteration < 0) || (iteration >= nitems))
 	{
-		elog(ERROR, "%s: invalid iteration %d; valid range is 0..%d",
-		     funcname, iteration, nitems - 1);
+		elog(ERROR, "%s: invalid iteration %d; valid range is 0..%d", funcname, iteration, nitems - 1);
 	}
 }
 
@@ -92,8 +91,7 @@ static void q3c_check_full_flag(const char *funcname, int full_flag)
 {
 	if ((full_flag != 0) && (full_flag != 1))
 	{
-		elog(ERROR, "%s: invalid full_flag %d; valid values are 0 and 1",
-		     funcname, full_flag);
+		elog(ERROR, "%s: invalid full_flag %d; valid values are 0 and 1", funcname, full_flag);
 	}
 }
 
