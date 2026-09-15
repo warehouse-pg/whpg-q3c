@@ -92,6 +92,8 @@ test: gen_data
 	diff results/join.out expected/join.expected
 	cat sql/join_ellipse.sql | psql q3c_test > results/join_ellipse.out
 	diff results/join_ellipse.out expected/join.expected
+	cat sql/large_query.sql | psql q3c_test > results/large_query.out
+	diff results/large_query.out expected/large_query.expected
 	cat sql/join_pm1.sql | psql q3c_test > results/join_pm1.out
 	diff results/join_pm1.out expected/join_pm1.expected
 	cat sql/join_pm2.sql | psql q3c_test > results/join_pm2.out
@@ -115,6 +117,8 @@ test: gen_data
 	psql q3c_test -c 'ALTER EXTENSION q3c UPDATE TO "2.0.1"'
 	psql q3c_test -c 'ALTER EXTENSION q3c UPDATE TO "2.0.2"'
 	psql q3c_test -c 'ALTER EXTENSION q3c UPDATE TO "2.0.3"'
+	psql q3c_test -c 'ALTER EXTENSION q3c UPDATE TO "2.0.4"'
+	psql q3c_test -c 'ALTER EXTENSION q3c UPDATE TO "2.0.5"'
 	dropdb q3c_test
 	createdb q3c_test
 	psql q3c_test -c "CREATE TABLE test (ra double precision, dec double precision)"
