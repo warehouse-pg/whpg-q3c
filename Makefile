@@ -13,6 +13,13 @@ OBJS = dump.o q3c.o q3c_poly.o q3cube.o
 MODULE_big = q3c
 DATA = $(wildcard scripts/*sql)
 PG_CONFIG = pg_config
+
+# pg_regress coverage, run via `make installcheck`/`make check` (PGXS).
+# This is separate from the `test`/gen_data harness below, which is a much
+# larger hand-rolled suite against generated data; REGRESS here is for
+# small, self-contained SQL-level regressions such as the array
+# null-bitmap walk (see sql/nullbitmap.sql).
+REGRESS = nullbitmap
 SHLIB_LINK += $(filter -lm, $(LIBS))
 EXTRA_CLEAN = dump.c prepare prepare.o gen_data.o \
 			results/join.out results/cone.out results/ellipse.out \

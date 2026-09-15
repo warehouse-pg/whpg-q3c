@@ -902,6 +902,21 @@ Datum pgq3c_ellipse_query_it(PG_FUNCTION_ARGS)
     }
 }
 
+/*
+ * bitmap points into an array's null-bitmap (ARR_NULLBITMAP), one bit per
+ * element. We deliberately type it uint8, not bits8:
+ *  - PG <= 18 (incl. WHPG7/PG12): "typedef uint8 bits8;" (src/include/c.h),
+ *    and ARR_NULLBITMAP returns bits8*. bits8 is not a distinct type, just
+ *    an alias, so uint8* is byte-for-byte, ABI-for-ABI identical to bits8*
+ *    here - no cast, no behavior change.
+ *  - PG 19 (WHPG19) removed the bits8 alias outright (upstream "bits8 ->
+ *    uint8 type tightening"); ARR_NULLBITMAP returns uint8* directly, and
+ *    the identifier "bits8" no longer exists. uint8 is therefore the only
+ *    spelling that compiles on every supported line, with no functional
+ *    difference on any of them.
+ * No PG_VERSION_NUM guard is needed for this: it is the same type on every
+ * supported server line, not a version-conditional one.
+ */
 static q3c_coord_t read_from_array(char **p, uint8 **bitmap, int *bitmask, bool typbyval, char typalign, int16 typlen)
 {
     q3c_coord_t val;
@@ -915,6 +930,14 @@ static q3c_coord_t read_from_array(char **p, uint8 **bitmap, int *bitmask, bool 
                 (errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED), errmsg("null array element not allowed in this context")));
     }
     val = DatumGetFloat8(fetch_att(*p, typbyval, typlen));
+    /*
+     * att_addlength_pointer's 3rd arg (attptr) is only read when typlen < 0
+     * (varlena/cstring, via VARSIZE_ANY()/strlen()); q3c always calls this
+     * with element_type == FLOAT8OID, a fixed 8-byte type, so attptr is
+     * never dereferenced here regardless of its value. Passing the actual
+     * data pointer (*p), not the address of the local pointer variable (p),
+     * is still the correct/general form expected by the macro.
+     */
     *p = att_addlength_pointer(*p, typlen, *p);
     *p = (char *)att_align_nominal(*p, typalign);
     if (*bitmap)

@@ -1,24 +1,24 @@
-ERROR:  Polygons with more than 100 vertices are not supported
+ERROR:  Polygons with more than 100 vertices are not supported (q3c.c:1023)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
 ERROR:  Invalid array argument!
-The array should contain even number of elements
+The array should contain even number of elements (q3c.c:976)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  Invalid polygon! The polygon must have more than two vertices
+ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:980)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
 ERROR:  null array element not allowed in this context
 ERROR:  null array element not allowed in this context
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  Invalid polygon! The polygon must have more than two vertices
+ERROR:  Invalid polygon! The polygon must have more than two vertices (q3c.c:1019)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  The polygon is too large. Polygons having diameter >~23 degrees are unsupported
+ERROR:  The polygon is too large. Polygons having diameter >~23 degrees are unsupported (q3c.c:1260)
 CONTEXT:  SQL function "q3c_poly_query" during inlining
-ERROR:  q3c_nearby_it: invalid iteration -1; valid range is 0..7
-ERROR:  q3c_nearby_it: invalid iteration 8; valid range is 0..7
-ERROR:  q3c_nearby_pm_it: invalid iteration 8; valid range is 0..7
-ERROR:  Right Ascension, Declination, cosdec_flag, radius, and iteration must not be null
-ERROR:  q3c_ellipse_nearby_it: invalid iteration 8; valid range is 0..7
-ERROR:  q3c_radial_query_it: invalid iteration 100; valid range is 0..99
-ERROR:  q3c_radial_query_it: invalid full_flag 2; valid values are 0 and 1
-ERROR:  q3c_ellipse_query_it: invalid iteration 100; valid range is 0..99
-ERROR:  q3c_poly_query_it: invalid iteration 100; valid range is 0..99
-ERROR:  q3c_poly_query_it: invalid iteration -1; valid range is 0..99
+ERROR:  q3c_nearby_it: invalid iteration -1; valid range is 0..7 (q3c.c:84)
+ERROR:  q3c_nearby_it: invalid iteration 8; valid range is 0..7 (q3c.c:84)
+ERROR:  q3c_nearby_pm_it: invalid iteration 8; valid range is 0..7 (q3c.c:84)
+ERROR:  Right Ascension, Declination, cosdec_flag, radius, and iteration must not be null (q3c.c:575)
+ERROR:  q3c_ellipse_nearby_it: invalid iteration 8; valid range is 0..7 (q3c.c:84)
+ERROR:  q3c_radial_query_it: invalid iteration 100; valid range is 0..99 (q3c.c:84)
+ERROR:  q3c_radial_query_it: invalid full_flag 2; valid values are 0 and 1 (q3c.c:92)
+ERROR:  q3c_ellipse_query_it: invalid iteration 100; valid range is 0..99 (q3c.c:84)
+ERROR:  q3c_poly_query_it: invalid iteration 100; valid range is 0..99 (q3c.c:84)
+ERROR:  q3c_poly_query_it: invalid iteration -1; valid range is 0..99 (q3c.c:84)
