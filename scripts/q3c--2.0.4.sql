@@ -46,28 +46,28 @@ COMMENT ON FUNCTION q3c_version()
 CREATE OR REPLACE FUNCTION q3c_ang2ipix(double precision, double precision)
         RETURNS bigint
         AS 'MODULE_PATHNAME', 'pgq3c_ang2ipix'
-        LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
+        LANGUAGE C IMMUTABLE STRICT;
 COMMENT ON FUNCTION q3c_ang2ipix (double precision, double precision)
 	IS 'Function converting Ra and Dec to the Q3C ipix value';
 
 CREATE OR REPLACE FUNCTION q3c_ang2ipix(ra real, decl real)
         RETURNS bigint
         AS 'MODULE_PATHNAME', 'pgq3c_ang2ipix_real'
-        LANGUAGE C IMMUTABLE STRICT  PARALLEL SAFE;
+        LANGUAGE C IMMUTABLE STRICT;
 COMMENT ON FUNCTION q3c_ang2ipix(real, real)
 	IS 'Function converting Ra and Dec(floats) to the Q3C ipix value';
 
 CREATE OR REPLACE FUNCTION q3c_ipix2ang(ipix bigint)
         RETURNS double precision[]
         AS 'MODULE_PATHNAME', 'pgq3c_ipix2ang'
-        LANGUAGE C IMMUTABLE STRICT  PARALLEL SAFE;
+        LANGUAGE C IMMUTABLE STRICT;
 COMMENT ON FUNCTION q3c_ipix2ang (bigint)
 	IS 'Function converting the Q3C ipix value to Ra, Dec';
 
 CREATE OR REPLACE FUNCTION q3c_pixarea(ipix bigint, depth int)
         RETURNS double precision
         AS 'MODULE_PATHNAME', 'pgq3c_pixarea'
-        LANGUAGE C IMMUTABLE STRICT  PARALLEL SAFE;
+        LANGUAGE C IMMUTABLE STRICT;
 COMMENT ON FUNCTION q3c_pixarea (bigint, int )
 	IS 'Function returning the area of the pixel containing ipix being located at certain depth in the quadtree';
 
@@ -82,7 +82,7 @@ CREATE OR REPLACE FUNCTION q3c_dist(ra1 double precision, dec1 double precision,
 									ra2 double precision, dec2 double precision)
         RETURNS double precision
         AS 'MODULE_PATHNAME', 'pgq3c_dist'
-        LANGUAGE C IMMUTABLE STRICT  PARALLEL SAFE; 
+        LANGUAGE C IMMUTABLE STRICT; 
 COMMENT ON FUNCTION q3c_dist(double precision, double precision,
 				double precision, double precision)
 	IS 'Function q3c_dist(ra1, dec1, ra2, dec2) computing the distance between points (ra1, dec1) and (ra2, dec2)';
@@ -91,7 +91,7 @@ CREATE OR REPLACE FUNCTION q3c_sindist(double precision, double precision,
                                        double precision, double precision)
         RETURNS double precision
         AS 'MODULE_PATHNAME', 'pgq3c_sindist'
-        LANGUAGE C IMMUTABLE STRICT  PARALLEL SAFE COST 100;
+        LANGUAGE C IMMUTABLE STRICT COST 100;
 COMMENT ON FUNCTION q3c_sindist(double precision, double precision,
 				double precision, double precision)
 	IS 'Function q3c_sindist(ra1, dec1, ra2, dec2) computing the sin(distance/2)^2 between points (ra1, dec1) and (ra2, dec2)';
@@ -104,7 +104,7 @@ CREATE OR REPLACE FUNCTION q3c_sindist_pm(
        epoch2 double precision)
         RETURNS double precision
         AS 'MODULE_PATHNAME', 'pgq3c_sindist_pm'
-        LANGUAGE C IMMUTABLE  PARALLEL SAFE COST 100;
+        LANGUAGE C IMMUTABLE COST 100;
 
 -- Importantly this is not strict 
 CREATE OR REPLACE FUNCTION q3c_dist_pm(
@@ -115,14 +115,14 @@ CREATE OR REPLACE FUNCTION q3c_dist_pm(
        epoch2 double precision)
         RETURNS double precision
         AS 'MODULE_PATHNAME', 'pgq3c_dist_pm'
-        LANGUAGE C IMMUTABLE  PARALLEL SAFE COST 100;
+        LANGUAGE C IMMUTABLE COST 100;
 -- Importantly this is not strict 
 
 CREATE OR REPLACE FUNCTION q3c_nearby_it(double precision, double precision, 
 					 double precision, integer)
         RETURNS bigint
         AS 'MODULE_PATHNAME', 'pgq3c_nearby_it'
-        LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE COST 100;
+        LANGUAGE C IMMUTABLE STRICT COST 100;
 
 CREATE OR REPLACE FUNCTION q3c_nearby_pm_it(
        ra1 double precision, dec1 double precision, 
@@ -131,14 +131,14 @@ CREATE OR REPLACE FUNCTION q3c_nearby_pm_it(
        maxepoch_delta double precision, rad double precision, flag integer)
         RETURNS bigint
         AS 'MODULE_PATHNAME', 'pgq3c_nearby_pm_it'
-        LANGUAGE C IMMUTABLE PARALLEL SAFE COST 100; 
+        LANGUAGE C IMMUTABLE COST 100; 
 -- Importantly this is NOT as strict function because we accept nulls as pms
 
 CREATE OR REPLACE FUNCTION q3c_ellipse_nearby_it(double precision, double precision, 
 		double precision, double precision, double precision, integer)
         RETURNS bigint
         AS 'MODULE_PATHNAME', 'pgq3c_ellipse_nearby_it'
-        LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE COST 100;
+        LANGUAGE C IMMUTABLE STRICT COST 100;
 
 CREATE OR REPLACE FUNCTION q3c_in_ellipse(ra0 double precision, dec0 double precision,
 					ra_ell double precision, dec_ell double precision,
@@ -1044,3 +1044,28 @@ CREATE OR REPLACE FUNCTION q3c_poly_query(
 q3c_in_poly($1,$2,$3) ;
 ' LANGUAGE SQL IMMUTABLE;
 
+-- PARALLEL {SAFE|RESTRICTED} requires PG >= 9.6 (WHPG7/WHPG19); WHPG6
+-- (PG9.4) does not have the grammar for it at all, not even as a
+-- no-op, so it cannot appear in the CREATE FUNCTION statements above
+-- unconditionally. Unlike a bare statement in a DO block (which
+-- PL/pgSQL parses at compile time regardless of which branch runs,
+-- and so would still fail on 9.4), EXECUTE takes a runtime string
+-- that is only parsed if this branch actually executes -- verified
+-- directly against a real PG 9.4 server.
+DO $$
+BEGIN
+    IF current_setting('server_version_num')::int >= 90600 THEN
+        EXECUTE 'ALTER FUNCTION q3c_ang2ipix(double precision, double precision) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_ang2ipix(ra real, decl real) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_ipix2ang(ipix bigint) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_pixarea(ipix bigint, depth int) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_dist(ra1 double precision, dec1 double precision, ra2 double precision, dec2 double precision) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_sindist(double precision, double precision, double precision, double precision) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_sindist_pm(ra1 double precision, dec1 double precision, pmra1 double precision, pmdec1 double precision, cosdec_flag integer, epoch1 double precision, ra2 double precision, dec2 double precision, epoch2 double precision) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_dist_pm(ra1 double precision, dec1 double precision, pmra1 double precision, pmdec1 double precision, cosdec_flag int, epoch1 double precision, ra2 double precision, dec2 double precision, epoch2 double precision) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_nearby_it(double precision, double precision, double precision, integer) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_nearby_pm_it(ra1 double precision, dec1 double precision, pmra1 double precision, pmdec1 double precision, cosdec_flag int, maxepoch_delta double precision, rad double precision, flag integer) PARALLEL SAFE';
+        EXECUTE 'ALTER FUNCTION q3c_ellipse_nearby_it(double precision, double precision, double precision, double precision, double precision, integer) PARALLEL SAFE';
+    END IF;
+END
+$$;
