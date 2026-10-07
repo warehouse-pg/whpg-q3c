@@ -1,5 +1,50 @@
-[![Build Status](https://github.com/segasai/q3c/workflows/q3c/badge.svg)](https://github.com/segasai/q3c/actions)
-[![Coverage Status](https://coveralls.io/repos/github/segasai/q3c/badge.svg?branch=master)](https://coveralls.io/github/segasai/q3c?branch=master)
+# WarehousePG Q3C
+
+## Introduction
+
+Q3C (Quad Tree Cube) is an extension for fast spatial indexing and queries on
+the sphere, mainly used for astronomical catalogs. It lets a distributed
+database like WarehousePG run cone searches, ellipse and polygon queries, and
+positional cross-matches of large catalogs (including proper motions) using an
+ordinary B-tree index on a Q3C pixel number.
+
+This repository is a fork of the open-source Q3C project
+(github.com/segasai/q3c), renamed to whpg-q3c and maintained for WarehousePG.
+The `whpg` branch is based on Q3C 2.0.5, with the WarehousePG changes on top.
+
+## Building and Testing
+
+With the WarehousePG `pg_config` on your `PATH`:
+
+```
+make
+make install         # may need root to write into $GPHOME
+# needs a running WarehousePG cluster; the regression output assumes the
+# Postgres planner, so turn GPORCA off as the packaging smoke test does
+PGOPTIONS='-c optimizer=off' make installcheck
+make test            # larger suite against generated data
+```
+
+`make test` compares query results rather than plans, so it runs with the
+cluster's default optimizer setting, as the packaging smoke test does.
+
+Then load the extension with `CREATE EXTENSION q3c;`.
+
+`make install` also installs this file as `q3c.md`, so the upstream Q3C
+documentation is kept below.
+
+## Contributing
+
+See [CONTRIBUTING.md](https://github.com/warehouse-pg/whpg-q3c/blob/whpg/CONTRIBUTING.md) and the
+[Code of Conduct](https://github.com/warehouse-pg/whpg-q3c/blob/whpg/CODE-OF-CONDUCT.md). To report a security issue, see
+[SECURITY.md](https://github.com/warehouse-pg/whpg-q3c/blob/whpg/SECURITY.md).
+
+## License
+
+GNU General Public License, version 2 or later. See [LICENSE.md](https://github.com/warehouse-pg/whpg-q3c/blob/whpg/LICENSE.md).
+
+---
+
 # Q3C
 
 Author: Sergey Koposov, University of Edinburgh
