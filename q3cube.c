@@ -75,7 +75,7 @@ static void array_filler(q3c_ipix_t *fulls, int fullpos, q3c_ipix_t *parts, int 
 
 void q3c_get_version(char *out, int maxchar)
 {
-    strncpy(out, __q3c_version, maxchar);
+    snprintf(out, maxchar, "%s", __q3c_version);
 }
 
 /* Distance calculation routine, inputs and outputs are in degrees */
