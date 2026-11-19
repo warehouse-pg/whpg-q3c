@@ -48,3 +48,108 @@
  0.0003806925
 (1 row)
 
+ q3c_radial_query 
+------------------
+ t
+(1 row)
+
+ q3c_in_poly 
+-------------
+ t
+ f
+(2 rows)
+
+ q3c_in_poly 
+-------------
+ t
+ f
+(2 rows)
+
+ q3c_poly_query 
+----------------
+ f
+ t
+(2 rows)
+
+ q3c_poly_query 
+----------------
+ f
+ t
+(2 rows)
+
+ q3c_in_poly 
+-------------
+ 
+(1 row)
+
+ q3c_in_poly 
+-------------
+ 
+(1 row)
+
+ q3c_radial_query_it 
+---------------------
+                   1
+(1 row)
+
+ q3c_radial_query 
+------------------
+ f
+(1 row)
+
+ q3c_ellipse_query_it 
+----------------------
+                    1
+(1 row)
+
+ q3c_ellipse_query 
+-------------------
+ f
+(1 row)
+
+ q3c_nearby_it | q3c_nearby_it 
+---------------+---------------
+             1 |            -1
+(1 row)
+
+ ra  | count 
+-----+-------
+  10 |     5
+ NaN |     0
+(2 rows)
+
+ round 
+-------
+      
+(1 row)
+
+ round 
+-------
+      
+(1 row)
+
+ n_index | n_exact 
+---------+---------
+       7 |       7
+(1 row)
+
+ n_index | n_exact 
+---------+---------
+      34 |      34
+(1 row)
+
+ n_index | n_exact 
+---------+---------
+      28 |      28
+(1 row)
+
+ in_ell | joined 
+--------+--------
+ t      | t
+(1 row)
+
+ outside | inside 
+---------+--------
+ f       | t
+(1 row)
+

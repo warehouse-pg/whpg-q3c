@@ -28,6 +28,16 @@
              
 (1 row)
 
+ q3c_ang2ipix 
+--------------
+             
+(1 row)
+
+ q3c_ang2ipix 
+--------------
+             
+(1 row)
+
  ?column? 
 ----------
  t
@@ -123,4 +133,4 @@
  {315,35.2643897079092}
 (1 row)
 
-ERROR:  Invalid ipix value (q3c.c:290)
+ERROR:  Invalid ipix value (q3c.c:303)
