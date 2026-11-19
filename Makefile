@@ -31,7 +31,16 @@ else
 	OPT = -O3
 endif
 #DEBUG = -O0 -g3 -ggdb -DQ3C_DEBUG
-PG_CPPFLAGS = $(DEBUG) $(OPT) -D_GNU_SOURCE -D__STDC_FORMAT_MACROS -DQ3C_VERSION='"'$(EXTVERSION)'"'
+
+# Do not let the compiler contract a*b+c into a fused multiply-add. gcc does
+# that by default on targets with FMA in the baseline ISA (ppc64le, aarch64)
+# but not on x86_64, so the same source rounds differently per architecture.
+# The inclusion tests (e.g. q3c_in_ellipse) compare two products with a
+# strict '<', so a row lying exactly on a region boundary would be returned
+# on one architecture and not on another. Turning contraction off makes all
+# architectures give the x86_64 answer.
+FP_FLAGS = -ffp-contract=off
+PG_CPPFLAGS = $(DEBUG) $(OPT) $(FP_FLAGS) -D_GNU_SOURCE -D__STDC_FORMAT_MACROS -DQ3C_VERSION='"'$(EXTVERSION)'"'
 CPPFLAGS = $(CPPFLAGS) -D$(Q3CVERSION)
 
 ifeq (, $(shell which $(PG_CONFIG)))
